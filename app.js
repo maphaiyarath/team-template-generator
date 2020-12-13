@@ -33,6 +33,7 @@ const render = require("./lib/htmlRenderer");
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work! ```
 
+// array to hold all staff
 const employees = [];
 
 // array of questions for the user
@@ -41,7 +42,7 @@ const questions = [
         type: 'list',
         name: 'role',
         message: 'What is the role of the employee you are adding:',
-        choices: ['Manager', 'Engineer', 'Intern', "Actually, I'm done"]
+        choices: ['Manager', 'Engineer', 'Intern']
     },
     {
         type: 'input',
@@ -75,6 +76,11 @@ const questions = [
         name: 'school',
         message: "Where does the intern go to school?",
         when: employee => employee.role === 'Intern'
+    },
+    {
+        type: 'confirm',
+        name: 'addEmployee',
+        message: "Would you like to add another employee?"
     }
 ];
 
@@ -83,18 +89,20 @@ const askQs = () => {
     inquirer
         .prompt(questions)
         .then(answers => {
-            if (answers.role === 'Manager') {
-                const manager = new Manager(answers.name, answers.id, answers.email, answers.officeNumber);
-                employees.push(manager);
-                askQs();
-            } else if (answers.role === 'Engineer') {
-                const engineer = new Engineer(answers.name, answers.id, answers.email, answers.github);
-                employees.push(engineer);
-                askQs();
-            } else if (answers.role === 'Intern') {
-                const intern = new Intern(answers.name, answers.id, answers.email, answers.school);
-                employees.push(intern);
-                askQs();
+            if (answers.addEmployee) {
+                if (answers.role === 'Manager') {
+                    const manager = new Manager(answers.name, answers.id, answers.email, answers.officeNumber);
+                    employees.push(manager);
+                    askQs();
+                } else if (answers.role === 'Engineer') {
+                    const engineer = new Engineer(answers.name, answers.id, answers.email, answers.github);
+                    employees.push(engineer);
+                    askQs();
+                } else if (answers.role === 'Intern') {
+                    const intern = new Intern(answers.name, answers.id, answers.email, answers.school);
+                    employees.push(intern);
+                    askQs();
+                }
             } else {
                 // write inquirer data to outputPath file
                 const data = render(employees);
@@ -106,18 +114,3 @@ const askQs = () => {
 };
 
 askQs();
-
-/*
-const init = async () => {
-    try {
-        const answers = await promptUser();
-        answers.badge = chooseBadge(answers.license);
-        console.log(answers);
-        const readme = md.generateMarkdown(answers);
-        await writeToFile('sample.md', readme);
-        console.log('Successfully wrote to sample.md');
-    } catch (err) {
-        console.log(err);
-    }
-};
-*/
