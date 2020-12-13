@@ -61,50 +61,44 @@ const questions = [
     {
         type: 'input',
         name: 'officeNumber',
-        message: "What is the manager's office number?"
-        // when: (... === 'Manager') => {
-        //     //
-        // }
+        message: "What is the manager's office number?",
+        when: employee => employee.role === 'Manager'
     },
     {
         type: 'input',
         name: 'github',
-        message: "What is the engineer's github?"
-        // when: (... === 'Engineer') => {
-        //     //
-        // }
+        message: "What is the engineer's Github?",
+        when: employee => employee.role === 'Engineer'
     },
     {
         type: 'input',
         name: 'school',
-        message: "Where did the intern go to school?"
-        // when: (... === 'Intern') => {
-        //     //
-        // }
+        message: "Where does the intern go to school?",
+        when: employee => employee.role === 'Intern'
     }
 ];
 
 // function to initialize program
-const askQs = async () => {
+const askQs = () => {
     inquirer
         .prompt(questions)
         .then(answers => {
-            if (answers.employeeType === 'Manager') {
+            if (answers.role === 'Manager') {
                 const manager = new Manager(answers.name, answers.id, answers.email, answers.officeNumber);
                 employees.push(manager);
                 askQs();
-            } else if (answers.employeeType === 'Engineer') {
+            } else if (answers.role === 'Engineer') {
                 const engineer = new Engineer(answers.name, answers.id, answers.email, answers.github);
                 employees.push(engineer);
                 askQs();
-            } else if (answers.employeeType === 'Intern') {
+            } else if (answers.role === 'Intern') {
                 const intern = new Intern(answers.name, answers.id, answers.email, answers.school);
                 employees.push(intern);
                 askQs();
             } else {
                 // write inquirer data to outputPath file
                 const data = render(employees);
-                fs.writeToFile(outputPath, data, (err) => {
+                fs.writeFile(outputPath, data, (err) => {
                     if (err) console.log(err);
                 });
             }
