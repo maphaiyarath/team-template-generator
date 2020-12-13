@@ -14,7 +14,7 @@ You can watch the walkthrough video [here](./TODO).
 * [Contributing](#contributing)
 
 ## Description
-TODO
+This is a software engineering team generator CLI app which prompts the user for information about the team members, from managers, engineers, to interns. When the user has completed building the team, the app will create an HTML file that displays a nicely formatted team roster.
 
 ## Installation
 Use the following command for installation:

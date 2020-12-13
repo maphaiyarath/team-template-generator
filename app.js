@@ -10,9 +10,6 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-// team
-
-
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
@@ -35,3 +32,98 @@ const render = require("./lib/htmlRenderer");
 // for further information. Be sure to test out each class and verify it generates an
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work! ```
+
+const employees = [];
+
+// array of questions for the user
+const questions = [
+    {
+        type: 'list',
+        name: 'role',
+        message: 'What is the role of the employee you are adding:',
+        choices: ['Manager', 'Engineer', 'Intern', "Actually, I'm done"]
+    },
+    {
+        type: 'input',
+        name: 'name',
+        message: "What is the employee's name?"
+    },
+    {
+        type: 'input',
+        name: 'id',
+        message: "What is the employee's ID?"
+    },
+    {
+        type: 'input',
+        name: 'email',
+        message: "What is the employee's email?"
+    },
+    {
+        type: 'input',
+        name: 'officeNumber',
+        message: "What is the manager's office number?"
+        // when: (... === 'Manager') => {
+        //     //
+        // }
+    },
+    {
+        type: 'input',
+        name: 'github',
+        message: "What is the engineer's github?"
+        // when: (... === 'Engineer') => {
+        //     //
+        // }
+    },
+    {
+        type: 'input',
+        name: 'school',
+        message: "Where did the intern go to school?"
+        // when: (... === 'Intern') => {
+        //     //
+        // }
+    }
+];
+
+// function to initialize program
+const askQs = async () => {
+    inquirer
+        .prompt(questions)
+        .then(answers => {
+            if (answers.employeeType === 'Manager') {
+                const manager = new Manager(answers.name, answers.id, answers.email, answers.officeNumber);
+                employees.push(manager);
+                askQs();
+            } else if (answers.employeeType === 'Engineer') {
+                const engineer = new Engineer(answers.name, answers.id, answers.email, answers.github);
+                employees.push(engineer);
+                askQs();
+            } else if (answers.employeeType === 'Intern') {
+                const intern = new Intern(answers.name, answers.id, answers.email, answers.school);
+                employees.push(intern);
+                askQs();
+            } else {
+                // write inquirer data to outputPath file
+                const data = render(employees);
+                fs.writeToFile(outputPath, data, (err) => {
+                    if (err) console.log(err);
+                });
+            }
+        });
+};
+
+askQs();
+
+/*
+const init = async () => {
+    try {
+        const answers = await promptUser();
+        answers.badge = chooseBadge(answers.license);
+        console.log(answers);
+        const readme = md.generateMarkdown(answers);
+        await writeToFile('sample.md', readme);
+        console.log('Successfully wrote to sample.md');
+    } catch (err) {
+        console.log(err);
+    }
+};
+*/
