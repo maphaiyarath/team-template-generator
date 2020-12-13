@@ -89,26 +89,29 @@ const askQs = () => {
     inquirer
         .prompt(questions)
         .then(answers => {
-            if (answers.addEmployee) {
-                if (answers.role === 'Manager') {
-                    const manager = new Manager(answers.name, answers.id, answers.email, answers.officeNumber);
-                    employees.push(manager);
-                    askQs();
-                } else if (answers.role === 'Engineer') {
-                    const engineer = new Engineer(answers.name, answers.id, answers.email, answers.github);
-                    employees.push(engineer);
-                    askQs();
-                } else if (answers.role === 'Intern') {
-                    const intern = new Intern(answers.name, answers.id, answers.email, answers.school);
-                    employees.push(intern);
-                    askQs();
-                }
-            } else {
-                // write inquirer data to outputPath file
+            // create a new employee
+            let newEmployee;
+
+            if (answers.role === 'Manager') {
+                newEmployee = new Manager(answers.name, answers.id, answers.email, answers.officeNumber);
+            } else if (answers.role === 'Engineer') {
+                newEmployee = new Engineer(answers.name, answers.id, answers.email, answers.github);
+            } else if (answers.role === 'Intern') {
+                newEmployee = new Intern(answers.name, answers.id, answers.email, answers.school);
+            }
+            
+            // add the employee to the array
+            employees.push(newEmployee);
+
+            // write inquirer data to outputPath file
+            if (!answers.addEmployee) {
                 const data = render(employees);
                 fs.writeFile(outputPath, data, (err) => {
                     if (err) console.log(err);
                 });
+            } else {
+                // continue adding more employees
+                askQs();
             }
         });
 };
