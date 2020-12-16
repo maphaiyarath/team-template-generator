@@ -2,7 +2,7 @@
 
 # OOP: Template Engine - Employee Summary
 
-![Team Template Generator App](./TODO)
+![Team Template Generator App](./team-template.png)
 You can watch the walkthrough video [here](./TODO).
 
 ## Table of Contents
